@@ -1,0 +1,319 @@
+<!-- LOGIN SCREEN VIEW -->
+<div *ngIf="!isLoggedIn" class="login-wrapper d-flex align-items-center justify-content-center vh-100 bg-dark">
+  <div class="card shadow-lg border-0 p-4 rounded-4" style="max-width: 420px; width: 100%;">
+    <div class="text-center mb-4">
+      <i class="bi bi-boxes text-warning display-4"></i>
+      <h3 class="fw-bold mt-2 text-dark">Mini WMS Portal</h3>
+      <p class="text-muted small">Warehouse Management System Login</p>
+    </div>
+
+    <form (submit)="$event.preventDefault(); onLogin()">
+      <div class="mb-3">
+        <label class="form-label fw-bold small">Mobile Number or Email</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light"><i class="bi bi-person-fill"></i></span>
+          <input type="text" class="form-control" [(ngModel)]="loginIdentifier" name="loginIdentifier" placeholder="Enter mobile or email" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold small">Password</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light"><i class="bi bi-lock-fill"></i></span>
+          <input type="password" class="form-control" [(ngModel)]="loginPassword" name="loginPassword" placeholder="Enter password" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-dark w-100 py-2 mb-3 fw-bold shadow-sm">
+        <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+      </button>
+
+      <div class="text-center text-muted mb-3 position-relative">
+        <span class="bg-white px-2 small">OR</span>
+        <hr class="position-absolute w-100 top-50 start-0 translate-middle-y z-n1">
+      </div>
+
+      <button type="button" class="btn btn-outline-danger w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2" (click)="onGoogleLogin()">
+        <i class="bi bi-google"></i> Sign in with Google
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN APPLICATION VIEW (Visible after login) -->
+<div *ngIf="isLoggedIn">
+  <!-- Navigation Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#" (click)="activeTab = 'dashboard'">
+        <i class="bi bi-boxes text-warning me-2"></i> Mini WMS <span class="text-muted fs-6">| Paper Core Hub</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'dashboard'" (click)="activeTab = 'dashboard'" role="button"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'inward'" (click)="activeTab = 'inward'" role="button"><i class="bi bi-box-arrow-in-down me-1"></i> Inward Entry</a></li>
+          <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'" role="button"><i class="bi bi-cart-plus me-1"></i> Order Entry</a></li>
+          <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'dispatch'" (click)="activeTab = 'dispatch'" role="button"><i class="bi bi-truck me-1"></i> Dispatch</a></li>
+          <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+            <button class="btn btn-outline-light btn-sm px-3" (click)="logout()"><i class="bi bi-box-arrow-right me-1"></i> Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container my-4">
+
+    <!-- DASHBOARD TAB -->
+    <div *ngIf="activeTab === 'dashboard'" class="fade-in">
+      <div class="p-5 mb-4 rounded-3 text-white hero-section shadow-lg">
+        <div class="container-fluid py-5 bg-overlay rounded-3 p-4">
+          <h1 class="display-5 fw-bold"><i class="bi bi-warehouse text-warning"></i> Warehouse Management System</h1>
+          <p class="col-md-8 fs-4">Streamline raw material inward logging, customer order feasibility, and strict lorry dispatch controls for paper core manufacturing.</p>
+          <button class="btn btn-warning btn-lg fw-bold text-dark mt-2" (click)="activeTab = 'inward'"><i class="bi bi-arrow-right-circle me-2"></i> Get Started</button>
+        </div>
+      </div>
+
+      <div class="row text-center g-4">
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 h-100 py-3">
+            <div class="card-body">
+              <i class="bi bi-box-seam display-4 text-primary mb-3"></i>
+              <h3 class="card-title h5">Inward Entry</h3>
+              <p class="card-text text-muted">Log paper stock (Mill, GSM, Width) and adhesive stock in KG[cite: 3].</p>
+              <button class="btn btn-outline-primary btn-sm" (click)="activeTab = 'inward'">Manage Stock</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 h-100 py-3">
+            <div class="card-body">
+              <i class="bi bi-clipboard-check display-4 text-success mb-3"></i>
+              <h3 class="card-title h5">Order Feasibility</h3>
+              <p class="card-text text-muted">Create customer orders with unit conversions and stock checks[cite: 3].</p>
+              <button class="btn btn-outline-success btn-sm" (click)="activeTab = 'orders'">Create Order</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 h-100 py-3">
+            <div class="card-body">
+              <i class="bi bi-truck display-4 text-danger mb-3"></i>
+              <h3 class="card-title h5">Strict Dispatch</h3>
+              <p class="card-text text-muted">Allocate lorries with capacity validations and full-order dispatch[cite: 3].</p>
+              <button class="btn btn-outline-danger btn-sm" (click)="activeTab = 'dispatch'">Go to Dispatch</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. INWARD ENTRY TAB -->
+    <div *ngIf="activeTab === 'inward'" class="fade-in">
+      <h2 class="mb-4 text-secondary"><i class="bi bi-box-arrow-in-down"></i> 1. Inward Stock Entry</h2>
+      
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 p-3 h-100">
+            <h4 class="card-title text-primary mb-3">Log Incoming Paper Stock</h4>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Mill Name</label>
+              <input type="text" class="form-control" [(ngModel)]="paperMill" placeholder="e.g. TNPL / JK Paper">
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">GSM</label>
+                <input type="number" class="form-control" [(ngModel)]="paperGsm" placeholder="e.g. 120">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Width (cm)</label>
+                <input type="number" class="form-control" [(ngModel)]="paperWidth" placeholder="e.g. 100">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Quantity</label>
+                <input type="number" class="form-control" [(ngModel)]="paperQuantity" placeholder="Amount">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Unit</label>
+                <select class="form-select" [(ngModel)]="paperUnit">
+                  <option value="Tons">Tons</option>
+                  <option value="KG">KG</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary mt-auto" (click)="addPaperStock()"><i class="bi bi-plus-lg me-1"></i> Save Paper Stock</button>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 p-3 h-100">
+            <h4 class="card-title text-success mb-3">Log Incoming Adhesive Stock</h4>
+            <p class="text-muted small">Adhesive stock must be recorded in Kilograms (KG) only[cite: 3].</p>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Quantity (KG)</label>
+              <input type="number" class="form-control" [(ngModel)]="adhesiveQuantityKg" placeholder="Enter quantity in KG">
+            </div>
+            <button class="btn btn-success mt-auto" (click)="addAdhesiveStock()"><i class="bi bi-plus-lg me-1"></i> Save Adhesive Stock</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 mt-5 p-3">
+        <h4 class="card-title text-dark mb-3"><i class="bi bi-table"></i> Current Warehouse Stock Table[cite: 3]</h4>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>Type</th>
+                <th>Mill</th>
+                <th>GSM</th>
+                <th>Width</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of stockTable">
+                <td><span class="badge" [class.bg-primary]="item.type === 'Paper'" [class.bg-success]="item.type === 'Adhesive'">{{item.type}}</span></td>
+                <td>{{item.mill}}</td>
+                <td>{{item.gsm}}</td>
+                <td>{{item.width}}</td>
+                <td class="fw-bold">{{item.quantity}}</td>
+                <td>{{item.unit}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ORDER ENTRY TAB -->
+    <div *ngIf="activeTab === 'orders'" class="fade-in">
+      <h2 class="mb-4 text-secondary"><i class="bi bi-cart-plus"></i> 2. Customer Order Entry & Feasibility</h2>
+      
+      <div class="card shadow-sm border-0 p-4 mb-4">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Customer Name</label>
+            <input type="text" class="form-control" [(ngModel)]="orderCustomer" placeholder="Enter customer name">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Source</label>
+            <input type="text" class="form-control" [(ngModel)]="orderSource" placeholder="e.g., Direct / Website">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Product ID</label>
+            <input type="text" class="form-control" [(ngModel)]="productId" placeholder="e.g. Core-XYZ">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Outer Diameter (OD) / Thickness</label>
+            <input type="text" class="form-control" placeholder="OD & Thickness Specs" [(ngModel)]="outerDiameter">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label fw-bold">Quantity</label>
+            <input type="number" class="form-control" [(ngModel)]="orderQuantity" (input)="onOrderQuantityChange()" placeholder="Qty">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label fw-bold">Unit</label>
+            <select class="form-select" [(ngModel)]="orderUnit" (change)="onOrderQuantityChange()">
+              <option value="Tons">Tons</option>
+              <option value="KG">KG</option>
+            </select>
+          </div>
+        </div>
+
+        <div *ngIf="convertedQuantity" class="alert alert-info mt-3 py-2">
+          <i class="bi bi-info-circle-fill me-2"></i> <strong>Unit Conversion:</strong> {{ convertedQuantity }}[cite: 3]
+        </div>
+
+        <div *ngIf="feasibilityMessage" class="alert mt-2 py-2" [ngClass]="feasibilityClass">
+          <i class="bi bi-shield-check me-2"></i> {{ feasibilityMessage }}
+        </div>
+
+        <div class="mt-3 d-flex gap-2">
+          <button class="btn btn-secondary" (click)="checkFeasibility()"><i class="bi bi-search me-1"></i> Check Feasibility</button>
+          <button class="btn btn-success" (click)="createOrder()"><i class="bi bi-check-circle me-1"></i> Create Order</button>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 p-3">
+        <h4 class="card-title text-dark mb-3">Pending Orders Summary</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-secondary">
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Product ID</th>
+                <th>Quantity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ord of ordersList">
+                <td class="fw-bold">{{ord.id}}</td>
+                <td>{{ord.customer}}</td>
+                <td>{{ord.product}}</td>
+                <td>{{ord.quantity}} {{ord.unit}}</td>
+                <td><span class="badge" [class.bg-warning]="ord.status === 'Pending'" [class.bg-success]="ord.status === 'Dispatched'">{{ord.status}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DISPATCH TAB -->
+    <div *ngIf="activeTab === 'dispatch'" class="fade-in">
+      <h2 class="mb-4 text-secondary"><i class="bi bi-truck"></i> 3. Lorry Dispatch Management</h2>
+
+      <div class="card shadow-sm border-0 p-4">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Select Order for Dispatch</label>
+            <select class="form-select" [(ngModel)]="selectedOrderForDispatch">
+              <option [ngValue]="null">-- Select Pending Order --</option>
+              <option *ngFor="let o of ordersList" [ngValue]="o" [disabled]="o.status === 'Dispatched'">
+                {{o.id}} - {{o.customer}} ({{o.quantity}} {{o.unit}}) - Status: {{o.status}}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Lorry Number</label>
+            <input type="text" class="form-control" [(ngModel)]="lorryNo" placeholder="e.g. TN-01-AB-1234">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Lorry Capacity (Tons)</label>
+            <input type="number" class="form-control" [(ngModel)]="lorryCapacity" placeholder="Max capacity in Tons">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Destination Location</label>
+            <input type="text" class="form-control" [(ngModel)]="dispatchLocation" placeholder="Delivery location">
+          </div>
+        </div>
+
+        <div class="alert alert-warning mt-3 mb-3">
+          <small><i class="bi bi-exclamation-triangle-fill me-1"></i> <strong>Note:</strong> Only <strong>entire orders</strong> can be dispatched (no partial dispatches). Dispatch will be blocked if the order weight exceeds the lorry capacity[cite: 3].</small>
+        </div>
+
+        <div *ngIf="dispatchMessage" class="alert py-2" [ngClass]="dispatchSuccess ? 'alert-success' : 'alert-danger'">
+          {{ dispatchMessage }}
+        </div>
+
+        <button class="btn btn-danger btn-lg mt-2 w-100 fw-bold" (click)="processDispatch()"><i class="bi bi-send-check me-2"></i> Process Dispatch</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center py-4 text-muted border-top mt-5 bg-light">
+    <p class="mb-0">Mini Warehouse Management System (WMS)</p>
+  </footer>
+</div>
